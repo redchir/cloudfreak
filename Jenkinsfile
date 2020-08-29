@@ -19,15 +19,15 @@ pipeline {
            }
         }
          
-        stage('Build docker image') {
-           steps {
-               script {         
-                 def customImage = docker.build('redchir/pipline-docker-jenkins', "./docker")
-                 docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-                 customImage.push("${env.BUILD_NUMBER}")
-                 }                     
-           }
+ registry = "redchir/petclinic"
+    registryCredential = 'dockerhub'
+  }  agent any  stages {
+    stage('Building image') {
+      steps{
+        script {
+          docker.build registry + ":$BUILD_NUMBER"
         }
-	  }
+      }
     }
+  }
 }
